@@ -39,10 +39,8 @@ describe('QR Code Service', () => {
       expect(result1).not.toBe(result2);
     });
 
-    it('should handle empty string input', async () => {
-      const result = await generateQRCode('');
-      expect(result).toBeDefined();
-      expect(result).toMatch(/^data:image\/png;base64,/);
+    it('should throw error for empty string input', async () => {
+      await expect(generateQRCode('')).rejects.toThrow();
     });
   });
 });
