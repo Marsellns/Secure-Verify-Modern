@@ -15,6 +15,12 @@ pipeline {
             }
         }
 
+        stage('Secret Scanning (GitLeaks)') {
+            steps {
+                sh 'docker run --rm -v $(pwd):/path zricethezav/gitleaks:latest detect --source="/path" -v || true'
+            }
+        }
+
         stage('Install Dependency') {
             steps {
                 sh 'npm install'
@@ -49,6 +55,12 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t $APP_NAME .'
+            }
+        }
+
+        stage('Container Image Scan (Trivy)') {
+            steps {
+                sh 'docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy:latest image $APP_NAME || true'
             }
         }
 
