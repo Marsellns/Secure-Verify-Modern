@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         APP_NAME = "secure-verify-modern"
-        PORT = "3000"
+        PORT = "8081" // Changed to 8081 to avoid conflict with Grafana on port 3000
         HOST_IP = "10.0.2.15" 
     }
 
@@ -57,7 +57,7 @@ pipeline {
                 sh '''
                 docker stop $APP_NAME || true
                 docker rm $APP_NAME || true
-                docker run -d -p $PORT:$PORT --name $APP_NAME $APP_NAME
+                docker run -d -p $PORT:3000 --name $APP_NAME $APP_NAME
                 '''
             }
         }
