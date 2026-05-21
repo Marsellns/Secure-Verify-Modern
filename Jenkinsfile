@@ -26,6 +26,12 @@ pipeline {
                 sh 'npm install'
             }
         }
+
+        stage('Unit Test & Coverage') {
+            steps {
+                sh 'npm run test:coverage'
+            }
+        }
         
         stage('SAST - SonarQube') {
             steps {
@@ -37,9 +43,10 @@ pipeline {
                         npx sonar-scanner \
                         -Dsonar.projectKey=${APP_NAME} \
                         -Dsonar.sources=. \
-                        -Dsonar.exclusions=node_modules/**,public/**,dist/**,build/**,**/*.env \
+                        -Dsonar.exclusions=node_modules/**,public/**,dist/**,build/**,**/*.env,tests/**,coverage/**,jest.config.js \
+                        -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
                         -Dsonar.host.url=http://${HOST_IP}:9000 \
-                        -Dsonar.login=\\$SONAR_TOKEN
+                        -Dsonar.login=\$SONAR_TOKEN
                         """
                     }
                 }
